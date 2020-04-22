@@ -115,7 +115,7 @@ read_dir(){
             fi
             # if need check, do something here
             if [ $need_check -eq 1 ]; then
-                tmp_name=$1"/"$f
+                tmp_name=$1$f
                 tmp_stat=`stat $tmp_name|grep Modify:`
                 if [ -z "${file_stats[$tmp_name]}" ]; then
                     file_stats[$tmp_name]=$tmp_stat
