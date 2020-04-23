@@ -77,7 +77,7 @@ check_do(){
     str=$1
     ext=${str##*.}
     # check if the file is in the neg_list
-    if echo "${neg_list}" | grep -w "$ext" &>/dev/null; then
+    if echo "${neg_list[@]}" | grep -w "$ext" &>/dev/null; then
         return
 
     fi
@@ -97,7 +97,7 @@ read_dir(){
             str=$1"/"$f
             ext=${str##*.}
             # check if the file is in the neg_list
-            if echo "${neg_list}" | grep -w "$ext" &>/dev/null; then
+            if echo "${neg_list[@]}" | grep -w "$ext" &>/dev/null; then
                 need_check=0
             else
                 # if pos_list is empty
@@ -105,7 +105,7 @@ read_dir(){
                     need_check=1
                 else
                     # check if the file is in the pos_list
-                    if echo "${pos_list}" | grep -w "$ext" &>/dev/null; then
+                    if echo "${pos_list[@]}" | grep -w "$ext" &>/dev/null; then
                         need_check=1
                     else
                         need_check=0
