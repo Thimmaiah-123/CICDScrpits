@@ -128,6 +128,7 @@ if [ -n "$txt" ] && [ -n "$commit_info" ]; then
         labels=$checked_label"\n"$rest_labels
         n2=$(echo "$labels" | wc -l)
         if [[ $n1 -ne $n2 ]]; then
+            git pull
             git push $id
         fi
         
