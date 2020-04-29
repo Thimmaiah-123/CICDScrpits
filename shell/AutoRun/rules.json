@@ -7,7 +7,7 @@
     "jupyterlab":{
         "full":"",
         "ext":"",
-        "cmd":"jlpm run build;jlpm install;jupyter labextension install . --no-build;jupyter lab build"
+        "cmd":"jlpm run build;jlpm install;jupyter labextension install . --no-build;jupyter lab builds"
     },
     "python3":{
         "full":"",
