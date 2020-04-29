@@ -12,15 +12,17 @@ file_stats=()
 _dir='.'
 pos_list=()
 neg_list=()
-config_file=`dirname $0`'/ignore.conf'
-do_something=`dirname $0`'/do_something.sh'
+config_file=$(cd $(dirname $0);pwd)'/ignore.conf'
+do_something=$(cd $(dirname $0);pwd)'/do_something.sh'
+rules=$(cd $(dirname $0);pwd)'/rules.json'
+env_conf='env.conf'
 
 usage(){
     echo "Usage:"
     echo "auto_run.sh [-c config fiel] dirname"
     exit -1
 }
-args="`getopt -u -q -o "c:h" -l "config,help" -- "$@"`" 
+args="`getopt -u -q -o "c:e:hr:" -l "config,help" -- "$@"`" 
 [ $? -ne 0 ] && usage
 
 set -- ${args}
@@ -30,8 +32,14 @@ while [ -n "$1" ]; do
         -c|--config) config_file=$2
             shift;;
 
+        -e) env_conf=$2
+            shift;;
+
         -h|--help)
             usage
+            shift;;
+
+        -r) rule=$2
             shift;;
 
         --) shift
@@ -47,6 +55,9 @@ for param in "$@"; do
 done
 
 # read out pos_list and neg_list
+_dir0=$(pwd)
+cd $_dir
+
 while read line; do
 
     if [ "$line" == "positive" ]; then
@@ -71,17 +82,12 @@ while read line; do
 
 done < $config_file
 
-check_do(){
-    # process the changed files
-    # get the extension
-    str=$1
-    ext=${str##*.}
-    # check if the file is in the neg_list
-    if echo "${neg_list[@]}" | grep -w "$ext" &>/dev/null; then
-        return
-
-    fi
-}
+if [ -e $env_conf ]; then
+    _env=$(cat $env_conf)
+else
+    _env="none"
+fi
+cd $_dir0
 
 read_dir(){
     # find out the updated file        
@@ -121,7 +127,8 @@ read_dir(){
                     file_stats[$tmp_name]=$tmp_stat
                 else
                     if [ "${file_stats[$tmp_name]}" != "$tmp_stat" ]; then
-                        source $do_something $tmp_name
+                        _env_tmp=$_env
+                        source $do_something $tmp_name $_env_tmp $rules
                         file_stats[$tmp_name]=$tmp_stat
                     fi
                 fi

@@ -1,0 +1,17 @@
+{
+    "python":{
+        "full":"",
+        "ext":"py",
+        "cmd":"python $fn"
+    },
+    "jupyterlab":{
+        "full":"",
+        "ext":"",
+        "cmd":"jlpm run build;jlpm install;jupyter labextension install . --no-build;jupyter lab build"
+    },
+    "python3":{
+        "full":"",
+        "ext":"py",
+        "cmd":"python3 $fn"
+    }
+}
