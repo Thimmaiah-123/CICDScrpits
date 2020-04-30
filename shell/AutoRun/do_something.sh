@@ -3,6 +3,7 @@
 fn=$1
 _env_tmp=$2
 rules=$3
+ws=$4
 ext=${fn##*.}
 # set env in file
 tmp=$(cat $fn | grep "#@env: " | tail -n 1)
@@ -24,8 +25,9 @@ for key in $keys; do
     full=$(cat $rules | jq ".$key.full" | sed 's/\"//g')
     rule_ext=$(cat $rules | jq ".$key.ext" | sed 's/\"//g')
     cmd=$(cat $rules | jq ".$key.cmd" | sed 's/\"//g')
-    if [[ "$full" == "$(basename $fn)" ]] || [[ "$ext" == "$rule_ext" ]]; then
+    if [[ "$full" == "$(basename $fn)" ]] || [[ "$ext" == "$rule_ext" ]] || [[ "$full" == "all" ]]; then
         eval $cmd
+        sleep 30
         break
     fi
 
