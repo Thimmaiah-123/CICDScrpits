@@ -5,9 +5,9 @@
         "cmd":"python $fn"
     },
     "jupyterlab":{
-        "full":"",
+        "full":"all",
         "ext":"",
-        "cmd":"jlpm run build;jlpm install;jupyter labextension install . --no-build;jupyter lab builds"
+        "cmd":"clear && cd $ws && jlpm run build && jlpm install && jupyter labextension install . --no-build && jupyter lab build"
     },
     "python3":{
         "full":"",
