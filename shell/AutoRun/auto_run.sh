@@ -12,14 +12,15 @@ file_stats=()
 _dir='.'
 pos_list=()
 neg_list=()
-config_file=$(cd $(dirname $0);pwd)'/ignore.conf'
+# config_file=$(cd $(dirname $0);pwd)'/ignore.conf'
+config_file=""
 do_something=$(cd $(dirname $0);pwd)'/do_something.sh'
 rules=$(cd $(dirname $0);pwd)'/rules.json'
 env_conf='env.conf'
 
 usage(){
     echo "Usage:"
-    echo "auto_run.sh [-c config fiel] dirname"
+    echo "auto_run.sh [-c config file] [-r rules-json] [-e env config] dirname"
     exit -1
 }
 args="`getopt -u -q -o "c:e:hr:" -l "config,help" -- "$@"`" 
@@ -57,7 +58,13 @@ done
 # read out pos_list and neg_list
 _dir0=$(pwd)
 cd $_dir
-
+if [[ -z "$config_file" ]]; then
+    if [[ -e "ignore.conf" ]]; then
+        config_file=$(pwd)"/ignore.conf"
+    else
+        config_file=$_dir0"/ignore.conf"
+    fi
+fi
 while read line; do
 
     if [ "$line" == "positive" ]; then
@@ -92,18 +99,26 @@ cd $_dir0
 read_dir(){
     # find out the updated file        
     for f in `ls $1`; do
-        if [ -d $1"/"$f ]; then
-            read_dir $1"/"$f
+        #echo $1 $f
+        if [ -d $1$f ]; then
+            if echo "${neg_list[@]}" | grep -w "$f" &>/dev/null; then
+                #echo $1$f
+                continue
+            fi
+            read_dir $1$f/
+            
         else
             #check if files changed here and do something more
             #_stat=`stat $1"/"$f|grep Modify:`
             # file_stats+=([$1"/"$f]="$_stat")
             # process the changed files
             # get the extension
-            str=$1"/"$f
+            str=$1$f
             ext=${str##*.}
             # check if the file is in the neg_list
             if echo "${neg_list[@]}" | grep -w "$ext" &>/dev/null; then
+                need_check=0
+            elif echo "${neg_list[@]}" | grep -w "$f" &>/dev/null; then
                 need_check=0
             else
                 # if pos_list is empty
@@ -128,7 +143,7 @@ read_dir(){
                 else
                     if [ "${file_stats[$tmp_name]}" != "$tmp_stat" ]; then
                         _env_tmp=$_env
-                        source $do_something $tmp_name $_env_tmp $rules
+                        source $do_something $tmp_name $_env_tmp $rules $_dir
                         file_stats[$tmp_name]=$tmp_stat
                     fi
                 fi
