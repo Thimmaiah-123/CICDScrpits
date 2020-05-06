@@ -7,7 +7,7 @@
     "jupyterlab":{
         "full":"all",
         "ext":"",
-        "cmd":"clear && cd $ws && jlpm run build && jlpm install && jupyter labextension install . --no-build && jupyter lab build"
+        "cmd":"clear && cd $ws && jlpm && jlpm run build && jlpm install && jupyter labextension install . --no-build && jupyter lab build"
     },
     "python3":{
         "full":"",
