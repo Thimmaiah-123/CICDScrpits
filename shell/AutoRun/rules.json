@@ -2,7 +2,7 @@
     "python":{
         "full":"",
         "ext":"py",
-        "cmd":"python $fn"
+        "cmd":"python3 $fn"
     },
     "jupyterlab":{
         "full":"all",
