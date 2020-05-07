@@ -14,5 +14,5 @@ auto_run.py .
 ```
 run the script and resave test.py, then you will find the followed response:  
 ```
-Just a test
+Just a test 
 ```
