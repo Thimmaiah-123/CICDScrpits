@@ -25,7 +25,11 @@ for key in $keys; do
     full=$(cat $rules | jq ".$key.full" | sed 's/\"//g')
     rule_ext=$(cat $rules | jq ".$key.ext" | sed 's/\"//g')
     cmd=$(cat $rules | jq ".$key.cmd" | sed 's/\"//g')
-    if [[ "$full" == "$(basename $fn)" ]] || [[ "$ext" == "$rule_ext" ]] || [[ "$full" == "all" ]]; then
+    if [[ "$full" == "$(basename $fn)" ]] || [[ "$ext" == "$rule_ext" ]]; then
+        eval $cmd
+        sleep 30
+        break
+    elif [[ "$full" == "all" ]] && [[ "$key" == "$_env_tmp" ]];then
         eval $cmd
         sleep 30
         break
