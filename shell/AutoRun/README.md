@@ -6,7 +6,8 @@ auto_run.py [-c config file] dirname
 ```
 config file is used to define the white-black-list of detected files. The default config file is ignore.conf. You can change it or define a new one  
 
-`do_something.sh` is used to define your command after detecting out a changed file  
+`do_something.sh` used to deliever file information to rules, and accrodingly chooses out the responding rule and acts it out.
+`rules.json` is a json file used to restore rules. Each rule consists of three conditions and an action. Three conditions are running environment, fullname and extension of the detected file. If one of them is matched, the action will be done. The first matched action will be done. You can rewrite the file to define your own rules
 
 ## Example
 ```bash
