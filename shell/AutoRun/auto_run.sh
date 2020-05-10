@@ -53,6 +53,9 @@ done
 # set dirname
 for param in "$@"; do
     _dir=$param
+    if [[ "${_dir:${#_dir}-1:1}" != "/" ]]; then 
+        _dir=${_dir}/
+    fi
 done
 
 # read out pos_list and neg_list
