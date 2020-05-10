@@ -46,7 +46,6 @@ for param in "$@"; do
     _dir=$param
     if [[ "${_dir:${#_dir}-1:1}" != "/" ]]; then
         _dir=${_dir}/
-    echo $_dir
     fi
 done
 
