@@ -44,6 +44,10 @@ done
 # set dirname
 for param in "$@"; do
     _dir=$param
+    if [[ "${_dir:${#_dir}-1:1}" != "/" ]]; then
+        _dir=${_dir}/
+    echo $_dir
+    fi
 done
 
 # read out pos_list and neg_list
@@ -71,33 +75,26 @@ while read line; do
 
 done < $config_file
 
-check_do(){
-    # process the changed files
-    # get the extension
-    str=$1
-    ext=${str##*.}
-    # check if the file is in the neg_list
-    if echo "${neg_list}" | grep -w "$ext" &>/dev/null; then
-        return
-
-    fi
-}
-
 read_dir(){
     # find out the updated file        
     for f in `ls $1`; do
-        if [ -d $1"/"$f ]; then
-            read_dir $1"/"$f
+        if [ -d $1$f ]; then
+            if echo "${neg_list[@]}" | grep -w "$f" &>/dev/null; then
+                continue
+            fi
+            read_dir $1$f/
         else
             #check if files changed here and do something more
             #_stat=`stat $1"/"$f|grep Modify:`
             # file_stats+=([$1"/"$f]="$_stat")
             # process the changed files
             # get the extension
-            str=$1"/"$f
+            str=$1$f
             ext=${str##*.}
             # check if the file is in the neg_list
             if echo "${neg_list}" | grep -w "$ext" &>/dev/null; then
+                need_check=0
+            elif echo "${neg_list[@]}" | grep -w "$f" &>/dev/null; then
                 need_check=0
             else
                 # if pos_list is empty
