@@ -15,7 +15,7 @@ neg_list=()
 # config_file=$(cd $(dirname $0);pwd)'/ignore.conf'
 config_file=""
 do_something=$(cd $(dirname $0);pwd)'/do_something.sh'
-rules=$(cd $(dirname $0);pwd)'/rules.json'
+rules=''
 env_conf='env.conf'
 
 usage(){
@@ -40,7 +40,8 @@ while [ -n "$1" ]; do
             usage
             shift;;
 
-        -r) rule=$2
+        -r) rules=$2
+
             shift;;
 
         --) shift
@@ -57,6 +58,12 @@ for param in "$@"; do
         _dir=${_dir}/
     fi
 done
+
+if [ -e ${_dir}rules.json ] && [ -z "$rules" ]; then
+    rules="${_dir}rules.json"
+else
+    rules=$(cd $(dirname $0);pwd)'/rules.json'
+fi
 
 # read out pos_list and neg_list
 _dir0=$(pwd)
