@@ -23,6 +23,17 @@ elif [ "${checked_branch:0:1}" == "*" ]; then
 else
     git checkout $branch
 fi
+# check if updated file is tracked
+signed=$(cat $fn | grep '#@git' | head -n 1)
+if [ -n "$signed" ]; then
+    git ls-files --error-unmatch $fn &> /dev/null
+    tracked=$?
+    if [ $tracked -eq 1 ]; then
+        tracked=0
+    else
+        tracked=1
+    fi
+fi
 
 # check git diff
 txt=$(git diff $fn)
@@ -101,6 +112,11 @@ for(( i=0; i<${#block[@]};i++ )); do
     commit_info=$commit_info"\n"$info
 done
 commit_info=$(echo -e "$commit_info" | sed 's/^ *//g')
+
+if [ $tracked -eq 0 ]; then
+    commit_info="add $(basename $fn)"
+    txt=filled
+fi
 # add and commit
 if [ -n "$txt" ] && [ -n "$commit_info" ]; then
     git add $fn
