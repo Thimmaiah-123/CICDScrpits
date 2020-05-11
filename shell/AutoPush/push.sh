@@ -30,7 +30,7 @@ branch=`cat $fn | grep '#@git branch' | tail -1`
 branch=${branch##*git branch}
 branch=`eval echo $branch`
 branches=`git branch`
-checked_branch=`echo "$branches" | grep $branch &> /dev/null`
+checked_branch=`echo "$branches" | grep $branch `
 
 if [ -z "$branch" ]; then
     :
@@ -158,5 +158,7 @@ if [ -n "$txt" ] && [ -n "$commit_info" ]; then
     fi
 
 fi
+echo ---
+echo $commit_info
 echo ---------
 cd $old_ws
