@@ -10,19 +10,6 @@ else
     comment=("#")
 fi
 
-cd `dirname $fn`
-branch=`cat $fn | grep '#@git branch' | tail -1`
-branch=${branch##*git branch}
-branch=`eval echo $branch`
-branches=`git branch`
-checked_branch=`echo "$branches" | grep $branch`
-if [ -z "$checked_branch" ]; then
-    echo "branch '$branch' doesn't exist"
-elif [ "${checked_branch:0:1}" == "*" ]; then
-    :
-else
-    git checkout $branch
-fi
 # check if updated file is tracked
 signed=$(cat $fn | grep '#@git' | head -n 1)
 if [ -n "$signed" ]; then
@@ -33,6 +20,26 @@ if [ -n "$signed" ]; then
     else
         tracked=1
     fi
+else
+    return
+fi
+
+
+cd `dirname $fn`
+branch=`cat $fn | grep '#@git branch' | tail -1`
+branch=${branch##*git branch}
+branch=`eval echo $branch`
+branches=`git branch`
+checked_branch=`echo "$branches" | grep $branch &> /dev/null`
+
+if [ -z "$branch" ]; then
+    :
+elif [ -z "$checked_branch" ]; then
+    echo "branch '$branch' doesn't exist"
+elif [ "${checked_branch:0:1}" == "*" ]; then
+    :
+else
+    git checkout $branch
 fi
 
 # check git diff
