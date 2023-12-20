@@ -1,6 +1,6 @@
 import sys
 from base64 import b64encode
-from nacl import encoding, public
+from nacl import encoding public
 
 public_key = sys.argv[1]
 secret_value = sys.argv[2]
